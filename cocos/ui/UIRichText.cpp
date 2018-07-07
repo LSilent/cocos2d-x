@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -1728,14 +1729,10 @@ void RichText::handleTextRenderer(const std::string& text, const std::string& fo
                 pushToContainer(textRenderer);
             }
 
-            // skip spaces
             StringUtils::StringUTF8::CharUTF8Store& str = utf8Text.getString();
-            int rightStart = leftLength;
-            while (rightStart < (int)str.size() && str[rightStart].isASCII() && std::isspace(str[rightStart]._char[0], std::locale()))
-                ++rightStart;
 
             // erase the chars which are processed
-            str.erase(str.begin(), str.begin() + rightStart);
+            str.erase(str.begin(), str.begin() + leftLength);
             currentText = utf8Text.getAsCharSequence();
         }
     }
