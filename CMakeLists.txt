@@ -26,13 +26,17 @@
 
 # build engine library and all tests
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.6)
 
 project(Cocos2d-x)
 
 # cocos2dx root path
 set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
+
+# prevent in-source-build
+include(PreventInSourceBuilds)
+AssureOutOfSourceBuilds()
 
 # works before build libcocos2d
 include(CocosBuildSet)
@@ -41,8 +45,6 @@ include(CocosBuildSet)
 set(BUILD_LUA_LIBS ON)
 set(BUILD_JS_LIBS ON)
 
-if(NOT USE_COCOS_PREBUILT)
-    add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
-endif()
+add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
 add_subdirectory(${COCOS2DX_ROOT_PATH}/tests ${ENGINE_BINARY_PATH}/tests)
 
