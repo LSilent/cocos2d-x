@@ -166,8 +166,6 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
         // Audio configuration
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-        Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
     }
 
     //native method,call GLViewImpl::getGLContextAttrs() to get the OpenGL ES context attributions
@@ -190,8 +188,6 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
             Cocos2dxAudioFocusManager.registerAudioFocusListener(this);
         this.hideVirtualButton();
        	resumeIfHasFocus();
-
-        Cocos2dxEngineDataManager.resume();
     }
     
     @Override
@@ -224,7 +220,6 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
             Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
         Cocos2dxHelper.onPause();
         mGLSurfaceView.onPause();
-        Cocos2dxEngineDataManager.pause();
     }
     
     @Override
@@ -232,8 +227,6 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         if(gainAudioFocus)
             Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
         super.onDestroy();
-
-        Cocos2dxEngineDataManager.destroy();
     }
 
     @Override
@@ -287,6 +280,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
         // Cocos2dxGLSurfaceView
         this.mGLSurfaceView = this.onCreateView();
+        this.mGLSurfaceView.setPreserveEGLContextOnPause(true);
 
         // ...add to FrameLayout
         mFrameLayout.addView(this.mGLSurfaceView);
@@ -307,7 +301,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     public Cocos2dxGLSurfaceView onCreateView() {
         Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
         //this line is need on some device if we specify an alpha bits
-        if(this.mGLContextAttrs[3] > 0) glSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        // FIXME: is it needed? And it will cause afterimage.
+        // if(this.mGLContextAttrs[3] > 0) glSurfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 
         // use custom EGLConfigureChooser
         Cocos2dxEGLConfigChooser chooser = new Cocos2dxEGLConfigChooser(this.mGLContextAttrs);

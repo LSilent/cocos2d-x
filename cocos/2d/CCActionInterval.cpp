@@ -30,6 +30,8 @@ THE SOFTWARE.
 
 #include <stdarg.h>
 
+#include <utility>
+
 #include "2d/CCSprite.h"
 #include "2d/CCNode.h"
 #include "2d/CCSpriteFrame.h"
@@ -89,7 +91,7 @@ void ExtraAction::step(float /*dt*/)
 bool ActionInterval::initWithDuration(float d)
 {
 
-    _duration = abs(d) <= MATH_EPSILON ? MATH_EPSILON : d;
+    _duration = std::abs(d) <= MATH_EPSILON ? MATH_EPSILON : d;
     _elapsed = 0;
     _firstTick = true;
     _done = false;
@@ -119,7 +121,7 @@ void ActionInterval::step(float dt)
     if (_firstTick)
     {
         _firstTick = false;
-        _elapsed = 0;
+        _elapsed = MATH_EPSILON;
     }
     else
     {
@@ -2425,7 +2427,6 @@ DelayTime* DelayTime::clone() const
 
 void DelayTime::update(float /*time*/)
 {
-    return;
 }
 
 DelayTime* DelayTime::reverse() const
@@ -2801,7 +2802,7 @@ void TargetedAction::setForcedTarget(Node* forcedTarget)
 
 // ActionFloat
 
-ActionFloat* ActionFloat::create(float duration, float from, float to, ActionFloatCallback callback)
+ActionFloat* ActionFloat::create(float duration, float from, float to, const ActionFloatCallback& callback)
 {
     auto ref = new (std::nothrow) ActionFloat();
     if (ref && ref->initWithDuration(duration, from, to, callback))
@@ -2814,7 +2815,7 @@ ActionFloat* ActionFloat::create(float duration, float from, float to, ActionFlo
     return nullptr;
 }
 
-bool ActionFloat::initWithDuration(float duration, float from, float to, ActionFloatCallback callback)
+bool ActionFloat::initWithDuration(float duration, float from, float to, const ActionFloatCallback& callback)
 {
     if (ActionInterval::initWithDuration(duration))
     {

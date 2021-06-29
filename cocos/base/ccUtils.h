@@ -189,8 +189,13 @@ namespace utils
     */
     CC_DLL LanguageType getLanguageTypeByISO2(const char* code);
 
-    CC_DLL void setBlending(GLenum sfactor, GLenum dfactor);
-    CC_DLL void enableVertexAttributes(uint32_t flags);
+    /**
+    @brief Parses a list of space-separated integers.
+    @return Vector of ints.
+    * @js NA
+    * @lua NA
+    */
+    CC_DLL std::vector<int> parseIntegerList(const std::string &intsString);
 }
 
 NS_CC_END
